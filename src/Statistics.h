@@ -1,0 +1,10 @@
+#ifndef PROJECT_CSIM_STATISTICS_H
+#define PROJECT_CSIM_STATISTICS_H
+
+
+class Statistics {
+
+};
+
+
+#endif //PROJECT_CSIM_STATISTICS_H
