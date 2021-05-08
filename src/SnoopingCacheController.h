@@ -19,7 +19,7 @@ private:
 public:
     void runCacheOp(long tag, long setInd, char operation) override;
 
-    Response deliverRequest(Request request) override;
+    Response requestHandler(Request request) override;
     
 };
 

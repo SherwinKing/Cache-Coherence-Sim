@@ -9,7 +9,7 @@ void SnoopingCacheController::runCacheOp(long tag, long setInd, char operation) 
  * @param request
  * @return
  */
-Response SnoopingCacheController::deliverRequest(Request request) {
+Response SnoopingCacheController::requestHandler(Request request) {
     cache.stateTransition(request.getRequestAddress(), request.getRequestType());
     Response response = Response(ACK);
     return response;

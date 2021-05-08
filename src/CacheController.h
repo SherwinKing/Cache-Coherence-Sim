@@ -8,7 +8,7 @@
 class CacheController {
 public:
     virtual void runCacheOp(long tag, long setInd, char operation);
-    virtual Response deliverRequest(Request request);
+    virtual Response requestHandler(Request request);
 };
 
 
