@@ -13,7 +13,7 @@ enum class TOPO { RING, D_RING, MESH, TORUS, TREES, CROSSBAR };
  * @param topo      topology used
  * @param num       number of nodes in the network
  */
-void latencyMatrix(std::vector<std::vector<int>>& matrix, TOPO topo, int num);
+void initializeLatencyMatrix(std::vector<std::vector<int>> &matrix, TOPO topo, int num);
 
 void ringLatency(std::vector<std::vector<int>>& matrix, int num);
 void dringLatency(std::vector<std::vector<int>>& matrix, int num);
