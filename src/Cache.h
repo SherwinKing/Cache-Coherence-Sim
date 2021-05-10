@@ -4,16 +4,9 @@
 
 #include <vector>
 #include <vector>
+#include <string>
 #include "Request.h"    // RequestType
 #include "CacheSet.h"
-
-typedef struct{
-    long tag;
-    long setID;
-    int dirtyBit;
-    int isEmpty;
-    int lastUseTimestamp;
-} CacheLine;
 
 class Cache {
 private:
@@ -21,13 +14,22 @@ private:
     int s;  // Number of set index bits (2^s is the cache size, or the number of sets in cache)
     int E;  // Associativity
     int b;  // Number of block bits
+
+    // Masks
+    long setIDMask;
+    long tagMask;
+
+    int totalProcessorNum;  // Total number of processors
     std::vector<CacheSet> cacheSets;
+
+    CacheLine *findCacheLine(long setID, long tag);
 
 public:
     Cache(int id, int s, int E, int b);
 
-    void stateTransition(long address, RequestType requestType);
-
+    int ifCacheLinePresent(long setInd, long tag);
+    CacheLine &getCacheLine(long setID, long tag);
+    CacheLine &findCacheBlockToReplace(long setID);
 };
 
 
