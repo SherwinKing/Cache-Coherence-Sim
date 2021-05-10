@@ -3,6 +3,23 @@
 
 
 #include "Cache.h"
+#include "Statistics.h"
+
+enum MESIState { M, E, S, I};
+
+typedef struct {
+    MESIState mesiState;
+    int tokenNum;
+} CoherenceState;
+
+typedef struct{
+    long tag;
+    long setID;
+    int dirtyBit;
+    int isEmpty;
+    int lastUseTimestamp;
+    CoherenceState coherenceState;
+} CacheLine;
 
 class CacheSet {
 private:
@@ -15,6 +32,10 @@ public:
     long getSetID() const;
 
     int getSetSize() const;
+
+    CacheLine * findCacheLine(long tag);
+
+    CacheLine & findCacheBlockToReplace();
 
     const std::vector<CacheLine> &getCacheLines() const;
 };
