@@ -6,7 +6,7 @@
 #include "Request.h"
 #include "CacheSet.h"
 
-class CacheController {
+class NodeController {
 private:
     virtual void transitCacheLineState(CacheLine &cacheLine, long cacheAddress, Request request);
 public:

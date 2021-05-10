@@ -5,12 +5,12 @@
 #include <vector>
 #include "Response.h"
 #include "Request.h"
-#include "CacheController.h"
+#include "NodeController.h"
 
 class Interconnection {
 private:
     std::vector<int> latencyVector;
-    std::vector<CacheController> cacheVector;
+    std::vector<NodeController> cacheVector;
 
     void setLatency(int i, int j, int latency);
     int getLatency(int nodeID1, int nodeID2);

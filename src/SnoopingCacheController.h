@@ -3,14 +3,14 @@
 #define PROJECT_CSIM_SNOOPINGCACHECONTROLLER_H
 
 
-#include "CacheController.h"
+#include "NodeController.h"
 #include "Cache.h"
 #include "Interconnection.h"
 #include "Statistics.h"
 #include "Response.h"
 #include "Request.h"
 
-class SnoopingCacheController: public CacheController {
+class SnoopingCacheController: public NodeController {
 private:
     int id;
     int s;  // Number of set index bits (2^s is the cache size, or the number of sets in cache)

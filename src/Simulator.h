@@ -9,7 +9,7 @@
 
 class Simulator {
 private:
-    std::vector<CacheController> cacheControllers;
+    std::vector<NodeController> cacheControllers;
     Statistics & statistics;
     Interconnection interconnection;
     int getOptions(int argc, char* argv[]);
