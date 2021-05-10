@@ -4,10 +4,13 @@
 
 #include "Response.h"
 #include "Request.h"
+#include "CacheSet.h"
 
 class CacheController {
+private:
+    virtual void transitCacheLineState(CacheLine &cacheLine, long cacheAddress, Request request);
 public:
-    virtual void runCacheOp(long tag, long setInd, char operation);
+    virtual void runCacheOp(long address, std::string operation, int timeStamp);
     virtual Response requestHandler(Request request);
 };
 
