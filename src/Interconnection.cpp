@@ -1,5 +1,9 @@
 #include "Interconnection.h"
 
+Interconnection::Interconnection(TOPO topo, int nodeNum) {
+    initializeLatencyMatrix(latencyMatrix, topo, nodeNum);
+}
+
 int Interconnection::sendRequest(int sourceID, int receiverID, Request request, Response & response) {
     int latency;
     // If receiver is special (used for directory node)
@@ -15,5 +19,5 @@ int Interconnection::sendRequest(int sourceID, int receiverID, Request request, 
 }
 
 int Interconnection::getLatency(int nodeID1, int nodeID2) {
-    return -1;
+    return latencyMatrix[nodeID1][nodeID2];
 }

@@ -6,18 +6,17 @@
 #include "Response.h"
 #include "Request.h"
 #include "NodeController.h"
+#include "Topo.h"
 
 class Interconnection {
 private:
-    std::vector<int> latencyVector;
+    std::vector<std::vector<int>> latencyMatrix;
     std::vector<NodeController> cacheVector;
 
     void setLatency(int i, int j, int latency);
     int getLatency(int nodeID1, int nodeID2);
 public:
-    Interconnection(int nodeNum) {
-        latencyVector.reserve(nodeNum * nodeNum);
-    }
+    Interconnection(TOPO topo, int nodeNum);
 
     int sendRequest(int sourceID, int receiverID, Request request, Response & response);
     int broadcastRequest(int sourceID, Request request, std::vector<Response> & responseVector);
