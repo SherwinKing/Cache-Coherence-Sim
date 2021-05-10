@@ -3,7 +3,6 @@
 
 Response::Response(ResponseType responseType) : responseType(responseType) {
     this->responseType = responseType;
-    cacheOwnerIDs = nullptr;
     tokenNum = 0;
 }
 

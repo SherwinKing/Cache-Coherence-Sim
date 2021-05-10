@@ -3,6 +3,7 @@
 #define PROJECT_CSIM_RESPONSE_H
 
 #include<list>
+#include <cassert>
 
 enum ResponseType { ACK, DIRECTORY_RESPONSE, TOKEN_RESPONSE};
 
