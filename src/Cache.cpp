@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Cache.h"
 #include "CacheSet.h"
 
@@ -18,13 +19,13 @@ Cache::Cache(int id, int s, int E, int b) : id(id), s(s), E(E), b(b) {
 
 CacheLine *Cache::findCacheLine(long setID, long tag) {
 //    // Get the set index and tag for the block
-//    long setID = (address & setIDMask) >> b;
-//    long tag = (address & tagMask) >> (s+b);
-    CacheSet cacheSet = cacheSets[setID];
+    std::cerr << "findcacheline setID: " << setID << std::endl;
+    CacheSet & cacheSet = cacheSets[setID];
     return cacheSet.findCacheLine(tag);
 }
 
 int Cache::ifCacheLinePresent(long setInd, long tag) {
+    std::cerr << "pointer:" << findCacheLine(setInd, tag) << std::endl;
     return findCacheLine(setInd, tag) != nullptr;
 }
 
@@ -37,6 +38,6 @@ CacheLine &Cache::getCacheLine(long setID, long tag) {
 }
 
 CacheLine & Cache::findCacheBlockToReplace(long setID) {
-    CacheSet cacheSet = cacheSets[setID];
+    CacheSet & cacheSet = cacheSets[setID];
     return cacheSet.findCacheBlockToReplace();
 }
