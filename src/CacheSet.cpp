@@ -1,8 +1,19 @@
+#include <iostream>
 #include "CacheSet.h"
 
 CacheSet::CacheSet(long setID, int setSize) : setID(setID) {
     this->setID = setID;
     this->setSize = setSize;
+    for (int i = 0; i < setSize; i++) {
+        CacheLine cacheLine;
+        cacheLine.setID = setID;
+        cacheLine.lastUseTimestamp = 0;
+        cacheLine.isEmpty = 1;
+        cacheLine.dirtyBit = 0;
+        cacheLine.tag = 0;
+        cacheLine.coherenceState = {.tokenNum = 0, .mesiState = I};
+        cacheLines.push_back(cacheLine);
+    }
 }
 
 long CacheSet::getSetID() const {
@@ -19,7 +30,7 @@ const std::vector<CacheLine> &CacheSet::getCacheLines() const {
 
 CacheLine *CacheSet::findCacheLine(long tag) {
     for (int i = 0; i < cacheLines.size(); i++) {
-        if (cacheLines[i].tag == tag) {
+        if (cacheLines[i].tag == tag && (!cacheLines[i].isEmpty)) {
             return & cacheLines[i];
         }
     }
@@ -34,6 +45,7 @@ CacheLine &CacheSet::findCacheBlockToReplace() {
         // If found empty cache block, use it
         if (iterator->isEmpty) {
             cacheLineToReplace = iterator;
+            std::cerr << "findCacheBlockToReplace: found empty block. iterator address" << &*cacheLineToReplace << std::endl;
             break;
         }
 
@@ -44,5 +56,7 @@ CacheLine &CacheSet::findCacheBlockToReplace() {
         }
         iterator++;
     }
+    std::cerr << "findCacheBlockToReplace iterator address" << &*cacheLineToReplace << std::endl;
+    std::cerr << "findCacheBlockToReplace block.isEmpty" << cacheLineToReplace->isEmpty << std::endl;
     return *cacheLineToReplace;
 }

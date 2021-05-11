@@ -2,7 +2,8 @@
 #define PROJECT_CSIM_CACHESET_H
 
 
-#include "Cache.h"
+//#include "Cache.h"
+#include <vector>
 #include "Statistics.h"
 
 enum MESIState { M, E, S, I};
