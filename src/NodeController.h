@@ -6,6 +6,7 @@
 #include "Response.h"
 #include "Request.h"
 #include "CacheSet.h"
+#include <string>
 
 class NodeController {
 private:
