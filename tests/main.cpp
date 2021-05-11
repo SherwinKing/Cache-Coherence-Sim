@@ -1,6 +1,8 @@
 #include <iostream>
 #include <getopt.h>
 #include <string>
+#include "../src/Simulator.h"
+#include "../src/Interconnection.h"
 
 int main(int argc, char * argv[]) {
     int option;
@@ -9,9 +11,10 @@ int main(int argc, char * argv[]) {
     int s;
     int E;
     int b;
+    int n;  // The number of processor
     std::string traceFilePath;
 
-    while( (option = getopt(argc, argv, "hvs:E:b:t:")) != -1 ){
+    while( (option = getopt(argc, argv, "hvs:E:b:t:n:")) != -1 ){
         switch(option){
             case 'v':
                 verbose = 1;
@@ -25,16 +28,25 @@ int main(int argc, char * argv[]) {
             case 'b':
                 b = atoi(optarg);
                 break;
+            case 'n':
+                n = atoi(optarg);
+                break;
             case 't':
                 traceFilePath = optarg;
                 break;
             default:
-                std::cerr << "Usage: ./main [-v] -s <s> -E <E> -b <b> -t <tracefile>");
+                std::cerr << "Usage: ./main [-v] -s <s> -E <E> -b <b> -t <tracefile>";
                 exit(EXIT_FAILURE);
         }
-
-
     }
+
+    TOPO interconnectionTOPO = TOPO::D_RING;
+    Simulator simulator(s, E, b, n, verbose, traceFilePath, interconnectionTOPO);
+
+    simulator.runTraceFile();
+
+
+    simulator.printSummary();
 
     return 0;
 }
