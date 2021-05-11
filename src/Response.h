@@ -4,7 +4,7 @@
 
 #include<list>
 
-enum ResponseType { ACK, DIRECTORY_RESPONSE, TOKEN_RESPONSE};
+enum ResponseType { ACK_SHARED, ACK_NOT_SHARED, DIRECTORY_RESPONSE, TOKEN_RESPONSE};
 
 class Response {
 private:
@@ -15,9 +15,13 @@ private:
 public:
     Response(ResponseType responseType);
 
+
+
     void setCacheOwnerIDs(const std::list<int> &cacheOwnerIDs);
 
     void setTokenNum(int tokenNum);
+
+    void setResponseType(ResponseType responseType);
 
     ResponseType getResponseType() const;
 

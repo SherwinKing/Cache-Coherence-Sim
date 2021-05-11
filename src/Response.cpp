@@ -3,7 +3,6 @@
 
 Response::Response(ResponseType responseType) : responseType(responseType) {
     this->responseType = responseType;
-    cacheOwnerIDs = nullptr;
     tokenNum = 0;
 }
 
@@ -27,4 +26,8 @@ const std::list<int> &Response::getCacheOwnerIDs() const {
 
 int Response::getTokenNum() const {
     return tokenNum;
+}
+
+void Response::setResponseType(ResponseType responseType) {
+    Response::responseType = responseType;
 }
