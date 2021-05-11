@@ -4,8 +4,6 @@
 void SnoopingCacheController::updateCacheLine(CacheLine &cacheLineToUpdate, long newTag, std::string operation,
                                               int timeStamp) {
     cacheLineToUpdate.tag = newTag;
-    std::cerr << "updateCacheLine << cacheLineToUpdate.tag: " << cacheLineToUpdate.tag << std::endl;
-    std::cerr << "in updateCacheLine, address: " << &cacheLineToUpdate;
     cacheLineToUpdate.isEmpty = 0;
     cacheLineToUpdate.lastUseTimestamp = timeStamp;
     cacheLineToUpdate.dirtyBit = (operation == "S") ? 1 : 0;
