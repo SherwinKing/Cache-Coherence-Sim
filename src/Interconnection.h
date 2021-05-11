@@ -7,6 +7,7 @@
 #include "Request.h"
 #include "NodeController.h"
 #include "Topo.h"
+#include <memory>
 
 class Interconnection {
 private:

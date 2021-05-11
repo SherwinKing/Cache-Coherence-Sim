@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Cache.h"
 #include "CacheSet.h"
+#include <cassert>
 
 Cache::Cache(int id, int s, int E, int b) : id(id), s(s), E(E), b(b) {
     this->id = id;

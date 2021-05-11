@@ -89,7 +89,7 @@ void SnoopingCacheController::transitCacheLineStateOnRequest(CacheLine &cacheLin
 
 void SnoopingCacheController::transitCacheLineStateOnOperation(CacheLine &cacheLine, long cacheAddress, std::string operation) {
 
-    if (operation == "L") {
+    if (operation == "R") {
         switch (cacheLine.coherenceState.mesiState) {
             case MESIState::I: {
                 // Broadcast request
