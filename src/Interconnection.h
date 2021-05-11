@@ -20,6 +20,7 @@ public:
 
     Response sendRequest(int sourceID, int receiverID, Request request, int & latency);
     int broadcastRequest(int sourceID, Request request, std::vector<Response> & responseVector);
+    void sendEviction(int sourceID, long setID, long tag, int content);
 };
 
 

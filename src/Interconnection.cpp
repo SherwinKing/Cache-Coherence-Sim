@@ -15,7 +15,7 @@ Response Interconnection::sendRequest(int sourceID, int receiverID, Request requ
         latency = getLatency(sourceID, receiverID);
     }
 
-    Response response = nodeControllerSmartPointerVector[receiverID]->requestHandler(request);
+    Response response = nodeControllerSmartPointerVector[receiverID]->requestHandler(request, sourceID);
     return response;
 }
 

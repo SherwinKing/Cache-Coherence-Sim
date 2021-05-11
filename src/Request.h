@@ -3,7 +3,8 @@
 #define PROJECT_CSIM_REQUEST_H
 
 
-enum RequestType { BusRd, BusRdX, TOKEN_REQUEST, DIRECTORY_REQUEST };
+enum RequestType { BusRd, BusRdX, TOKEN_REQUEST, DIRECTORY_REQUEST_R, 
+                   DIRECTORY_REQUEST_W };
 enum CoherenceType { SNOOPING, TOKEN, DIRECTORY };
 
 class Request {

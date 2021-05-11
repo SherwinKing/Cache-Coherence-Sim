@@ -6,6 +6,7 @@
 #include "Response.h"
 #include "Request.h"
 #include "CacheSet.h"
+#include <string>
 
 class NodeController {
 private:
@@ -13,7 +14,12 @@ private:
 //    virtual void transitCacheLineStateOnOperation(CacheLine &cacheLine, long cacheAddress, std::string operation);
 public:
     virtual void runCacheOp(long address, std::string operation, int timeStamp) = 0;
-    virtual Response requestHandler(Request request) = 0;
+//    virtual Response requestHandler(Request request) = 0;
+
+    virtual Response requestHandler(Request request, int sourceID) = 0;
+
+    // directory function
+    virtual void evictionHandler(int sourceID, long setID, long tag, int token) = 0;
 };
 
 
