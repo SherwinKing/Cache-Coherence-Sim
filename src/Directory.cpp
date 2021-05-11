@@ -6,7 +6,7 @@ long Directory::getLineID(long address){
 }
 
 long Directory::getLineID(long setID, long tag){
-    return (setID << b_) | (tag << s_+b_);
+    return setID | tag << s_;
 }
 
 /**
@@ -24,6 +24,68 @@ bool Directory::getLine(DirectoryLine** line_ptr, long lineID){
 }
 
 Response Directory::requestHandler(Request request, int sourceID){
+    if(mode_ == DIRECTORY)
+        return requestHandler_DIREC(request, sourceID);
+    if(mode_ == TOKEN)
+        return requestHandler_TOKEN(request, sourceID);
+}
+
+void Directory::evictionHandler(int sourceID, long setID, long tag, int token){
+    if(mode_ == DIRECTORY)
+        evictionHandler_DIREC(sourceID, setID, tag, token);
+    if(mode_ == TOKEN)
+        evictionHandler_TOKEN(sourceID, setID, tag, token);
+}
+
+Response Directory::requestHandler_TOKEN(Request request, int sourceID){
+    Response response(TOKEN_RESPONSE);
+
+    assert(request.getRequestType() == TOKEN_REQUEST_R ||
+           request.getRequestType() == TOKEN_REQUEST_W);
+    assert(request.getCoherenceType() == TOKEN);
+
+    long address = request.getRequestAddress();
+    long lineID = getLineID(address);
+
+    DirectoryLine* line;
+    bool if_exist = getLine(&line, lineID);
+
+    if(request.getRequestType() == TOKEN_REQUEST_R){
+        if(line->token_pool_ > 0){
+            line->token_pool_--;
+            response.setTokenNum(1);
+        }
+        else
+            response.setTokenNum(0);
+    }
+    if(request.getRequestType() == TOKEN_REQUEST_W){
+        if(line->token_pool_ > 0){
+            response.setTokenNum(line->token_pool_);
+            line->token_pool_ = 0;
+        }
+        else
+            response.setTokenNum(0);
+    }
+
+    return response;
+}
+
+
+void Directory::evictionHandler_TOKEN(int sourceID, long setID, long tag, int token){
+    long lineID = getLineID(setID, tag);
+    DirectoryLine* line;
+    bool if_exist = getLine(&line, lineID);
+    assert(if_exist);
+    assert(token >= 0);
+    
+    line->token_pool_ += token;
+    if(line->token_pool_ == numCaches_){
+        directory_.erase(lineID);
+        delete line;
+    }
+}
+
+Response Directory::requestHandler_DIREC(Request request, int sourceID){
     Response response(DIRECTORY_RESPONSE);
 
     assert(request.getRequestType() == DIRECTORY_REQUEST_R ||
@@ -92,7 +154,7 @@ Response Directory::requestHandler(Request request, int sourceID){
 }
 
 
-void Directory::evictionHandler(int sourceID, long setID, long tag, int token){
+void Directory::evictionHandler_DIREC(int sourceID, long setID, long tag, int token){
     long lineID = getLineID(setID, tag);
     DirectoryLine* line;
     bool if_exist = getLine(&line, lineID);
@@ -111,6 +173,7 @@ void Directory::evictionHandler(int sourceID, long setID, long tag, int token){
             if(p)   any_valid = true;
         if(!any_valid){
             directory_.erase(lineID);
+            delete line;
         }
     }
 
