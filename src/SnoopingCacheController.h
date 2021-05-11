@@ -2,7 +2,7 @@
 #ifndef PROJECT_CSIM_SNOOPINGCACHECONTROLLER_H
 #define PROJECT_CSIM_SNOOPINGCACHECONTROLLER_H
 
-
+#include <string>
 #include "NodeController.h"
 #include "Cache.h"
 #include "Interconnection.h"
@@ -17,24 +17,28 @@ private:
     int E;  // Associativity
     int b;  // Number of block bits
 
-    long setIndMask;
+    long setIDMask;
     long tagMask;
 
     const CoherenceType coherenceType = SNOOPING;
     int processorID;
     Cache cache;
-    Interconnection interconnection;
+    Interconnection & interconnection;
     Statistics & statistics;
 
-    void transitCacheLineState(CacheLine &cacheLine, long cacheAddress, Request request) override;
+    void transitCacheLineStateOnRequest(CacheLine &cacheLine, long cacheAddress, Request request) override ;
+
+    void transitCacheLineStateOnOperation(CacheLine &cacheLine, long cacheAddress, std::string operation)  ;
 
     void updateCacheLine(CacheLine &cacheLineToUpdate, long newTag, std::string operation, int timeStamp);
 
 public:
+    SnoopingCacheController(int s, int E, int b, int processorID,
+                            Interconnection &interconnection, Statistics &statistics);
+
     void runCacheOp(long address, std::string operation, int timeStamp) override;
 
     Response requestHandler(Request request) override;
-
 };
 
 
