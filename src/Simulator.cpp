@@ -16,7 +16,7 @@ void Simulator::runTraceFile() {
         iss >> std::hex >> address;
 
         // Execute trace line
-        nodeSmartPointerControllers[processorID].get()->runCacheOp(address, operation, 0);
+        nodeSmartPointerControllers[processorID].get()->runCacheOp(address, operation, timeStamp);
 
         timeStamp++;
     }
