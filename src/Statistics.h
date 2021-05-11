@@ -3,6 +3,14 @@
 
 
 class Statistics {
+private:
+    long totalOperationNum;
+    long cacheHitNum;
+    long cacheMissNum;
+    long cacheFlushNum;
+    long cacheEvictionNum;
+    long cacheInvalidationNum;
+    long latencySum;
 
 public:
     void cacheHit(int processorID, long address);
@@ -10,6 +18,10 @@ public:
     void cacheFlush(int processorID, long address);
     void cacheEvict(int processorID, long setID, long tag);
     void cacheInvalidate(int processorID, long address);
+
+    void printSummary();
+
+    Statistics();
 };
 
 
