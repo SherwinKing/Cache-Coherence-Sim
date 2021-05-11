@@ -2,16 +2,18 @@
 #define PROJECT_CSIM_CACHECONTROLLER_H
 
 
+#include <string>
 #include "Response.h"
 #include "Request.h"
 #include "CacheSet.h"
 
 class NodeController {
 private:
-    virtual void transitCacheLineState(CacheLine &cacheLine, long cacheAddress, Request request);
+    virtual void transitCacheLineStateOnRequest(CacheLine &cacheLine, long cacheAddress, Request request) = 0;
+//    virtual void transitCacheLineStateOnOperation(CacheLine &cacheLine, long cacheAddress, std::string operation);
 public:
-    virtual void runCacheOp(long address, std::string operation, int timeStamp);
-    virtual Response requestHandler(Request request);
+    virtual void runCacheOp(long address, std::string operation, int timeStamp) = 0;
+    virtual Response requestHandler(Request request) = 0;
 };
 
 
