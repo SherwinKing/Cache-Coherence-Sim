@@ -12,11 +12,15 @@
 // information about all datalines in caches
 struct DirectoryLine {
     DirectoryLine(int numCaches)
-        : dirty_(false) {
+        : dirty_(false),
+          token_pool_(numCaches) {
             presence_.resize(numCaches, false);
         }
+    // meta data for directory based coherence
     bool dirty_;
     std::vector<bool> presence_;
+    // meta data for token based coherence
+    int token_pool_;
 };
 
 
@@ -24,11 +28,12 @@ struct DirectoryLine {
 class Directory: public NodeController {
 public:
     
-    Directory(int numCaches, int b, int s)
+    Directory(int numCaches, int b, int s, CoherenceType mode)
         : nodeID_(-1),
           numCaches_(numCaches),
           b_(b),
-          s_(s) {}
+          s_(s),
+          mode_(mode) {}
 
     virtual ~Directory() {
         for(auto& i : directory_)
@@ -48,11 +53,17 @@ private:
     int numCaches_; 
     int b_;         // number of cache line bits
     int s_;         // number of set bits
+    CoherenceType mode_;
+    std::unordered_map<long, DirectoryLine*> directory_;
 
     bool getLine(DirectoryLine** line_ptr, long lineID);
     long getLineID(long address);
     long getLineID(long setID, long tag);
-    std::unordered_map<long, DirectoryLine*> directory_;
+
+    Response requestHandler_TOKEN(Request request, int sourceID);
+    Response requestHandler_DIREC(Request request, int sourceID);
+    void evictionHandler_TOKEN(int sourceID, long setID, long tag, int token);
+    void evictionHandler_DIREC(int sourceID, long setID, long tag, int token);
 
 };
 
