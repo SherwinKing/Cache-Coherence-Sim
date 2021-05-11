@@ -1,7 +1,7 @@
 #include "Topo.h"
 
 void
-latencyMatrix(std::vector<std::vector<int>>& matrix, TOPO topo, int num){
+initializeLatencyMatrix(std::vector<std::vector<int>>& matrix, TOPO topo, int num){
 
     matrix.reserve(num);
     for(int i=0; i<num; i++){
