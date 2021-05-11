@@ -39,8 +39,8 @@ CacheLine *CacheSet::findCacheLine(long tag) {
 
 CacheLine &CacheSet::findCacheBlockToReplace() {
     std::vector<CacheLine>::iterator iterator = cacheLines.begin();
-    int leastRecentTimeStamp = iterator->lastUseTimestamp;
-    std::vector<CacheLine>::iterator cacheLineToReplace;
+    std::vector<CacheLine>::iterator cacheLineToReplace = iterator;
+    int leastRecentTimeStamp = cacheLineToReplace->lastUseTimestamp;
     while (iterator != cacheLines.end()) {
         // If found empty cache block, use it
         if (iterator->isEmpty) {
