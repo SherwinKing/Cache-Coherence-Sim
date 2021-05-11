@@ -38,7 +38,9 @@ public:
 
     void runCacheOp(long address, std::string operation, int timeStamp) override;
 
-    Response requestHandler(Request request) override;
+    Response requestHandler(Request request, int sourceID) override;
+
+    void evictionHandler(int sourceID, long setID, long tag, int token) override;
 };
 
 

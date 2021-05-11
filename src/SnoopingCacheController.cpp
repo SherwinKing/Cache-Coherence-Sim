@@ -48,7 +48,7 @@ void SnoopingCacheController::runCacheOp(long address, std::string operation, in
  * @param request
  * @return
  */
-Response SnoopingCacheController::requestHandler(Request request) {
+Response SnoopingCacheController::requestHandler(Request request, int sourceID) {
     Response response = Response(ACK_NOT_SHARED);
     long address = request.getRequestAddress();
     long setID = (address & setIDMask) >> b;
@@ -157,5 +157,9 @@ SnoopingCacheController::SnoopingCacheController(int s, int E, int b,
 //    this->interconnection = interconnection;
 //    this->statistics = statistics;
 //    cache = Cache(processorID, s, E, b);
+}
+
+void SnoopingCacheController::evictionHandler(int sourceID, long setID, long tag, int token) {
+    return;
 }
 
