@@ -38,3 +38,7 @@ int Interconnection::broadcastRequest(int sourceID, Request request, std::vector
     }
     return  totalLatency;
 }
+
+void Interconnection::sendEviction(int sourceID, long setID, long tag, int content) {
+    nodeControllerSmartPointerVector[nodeControllerSmartPointerVector.size()-1]->evictionHandler(sourceID, setID, tag, content);
+}
