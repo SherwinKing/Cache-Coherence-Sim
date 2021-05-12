@@ -45,8 +45,10 @@ public:
     
     // will not use these
     void runCacheOp(long address, std::string operation, int timeStamp) override{}
-    void transitCacheLineState(CacheLine &cacheLine, long cacheAddress, Request request) override {}
+    //void transitCacheLineState(CacheLine &cacheLine, long cacheAddress, Request request) override;
 
+    void transitCacheLineStateOnRequest(CacheLine &cacheLine, long cacheAddress, Request request) override {}
+    void transitCacheLineStateOnOperation(CacheLine &cacheLine, long cacheAddress, std::string operation) override {}
 private:
     
     int nodeID_;    // directory has id of -1

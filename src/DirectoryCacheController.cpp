@@ -21,9 +21,11 @@ void DirectoryCacheController::runCacheOp(long address, std::string operation, i
 
     // Cache hit
     if (cache.ifCacheLinePresent(setID, tag)) {
-        statistics.cacheHit(processorID, address);
-
         cacheLinePtr = & cache.getCacheLine(setID, tag);
+        if(cacheLinePtr->coherenceState.mesiState == I)
+            statistics.cacheMiss(processorID, address);
+        else
+            statistics.cacheHit(processorID, address);
     }
     // Cache miss
     else {
@@ -35,7 +37,7 @@ void DirectoryCacheController::runCacheOp(long address, std::string operation, i
         if (!cacheLinePtr->isEmpty) {
             statistics.cacheEvict(processorID, cacheLinePtr->setID, cacheLinePtr->tag);
             // TODO send message to directory
-            interconnection.sendEviction(
+            interconnection.sendEviction(processorID, setID, tag, 0);
             //cacheLinePtr->isEmpty = 1;
         }
     }
@@ -118,7 +120,7 @@ void DirectoryCacheController::transitCacheLineStateOnOperation(CacheLine &cache
                 Request directoryRequest(directoryRequestType, coherenceType, cacheAddress);
                 Response directoryResponse = interconnection.sendRequest(processorID, -1, directoryRequest, directoryLatency);
                 // if empty cache owner id, go to state E, S otherwise
-                if(directoryResponse.getCacheOwnerIDs.size() == 0){
+                if(directoryResponse.getCacheOwnerIDs().size() == 0){
                     cacheLine.coherenceState.mesiState = MESIState::E;
                 }
                 else{
@@ -196,7 +198,7 @@ void DirectoryCacheController::transitCacheLineStateOnOperation(CacheLine &cache
 DirectoryCacheController::DirectoryCacheController(int s, int E, int b,
                                                  int processorID, Interconnection &interconnection,
                                                  Statistics &statistics) : s(s), E(E), b(b),
-                                                                           coherenceType(SNOOPING),
+                                                                           coherenceType(DIRECTORY),
                                                                            processorID(processorID),
                                                                            interconnection(interconnection),
                                                                            cache(processorID, s, E, b),

@@ -7,6 +7,8 @@
 #include <fstream>
 #include <getopt.h>
 #include "SnoopingCacheController.h"
+#include "DirectoryCacheController.h"
+#include "Directory.h"
 #include "Cache.h"
 #include "Statistics.h"
 #include "Interconnection.h"

@@ -7,6 +7,7 @@
 #include <string>
 #include "Request.h"    // RequestType
 #include "CacheSet.h"
+#include <cassert>
 
 class Cache {
 private:
