@@ -11,6 +11,7 @@ private:
     long cacheEvictionNum;
     long cacheInvalidationNum;
     long latencySum;
+    int processorNum;
 
 public:
     void cacheHit(int processorID, long address);
@@ -20,6 +21,8 @@ public:
     void cacheInvalidate(int processorID, long address);
 
     void printSummary();
+
+    void setProcessorNum(int processorNum);
 
     Statistics();
 };

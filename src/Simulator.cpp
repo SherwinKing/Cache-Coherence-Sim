@@ -1,6 +1,6 @@
 #include "Simulator.h"
 
-
+int TOTAL_PROC_NUM;
 
 void Simulator::runTraceFile() {
     int processorID;
@@ -44,4 +44,6 @@ Simulator::Simulator(int s, int E, int b, int n, int verbose, std::string traceF
 
     interconnection = Interconnection(topo, nodeSmartPointerControllers);
     statistics = Statistics();
+    TOTAL_PROC_NUM = n;
+    statistics.setProcessorNum(n);
 }

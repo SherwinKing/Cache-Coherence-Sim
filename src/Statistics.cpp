@@ -9,6 +9,7 @@ Statistics::Statistics() {
     cacheEvictionNum = 0;
     cacheInvalidationNum = 0;
     latencySum = 0;
+    totalOperationNum = 0;
 }
 
 void Statistics::cacheHit(int processorID, long address) {
@@ -40,4 +41,8 @@ void Statistics::printSummary() {
     std::cout << "Cache flush number: " << cacheFlushNum << std::endl;
     std::cout << "Cache evict number: " << cacheEvictionNum << std::endl;
     std::cout << "Cache invalidate number: " << cacheInvalidationNum << std::endl;
+}
+
+void Statistics::setProcessorNum(int processorNum) {
+    Statistics::processorNum = processorNum;
 }

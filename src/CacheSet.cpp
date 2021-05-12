@@ -11,7 +11,7 @@ CacheSet::CacheSet(long setID, int setSize) : setID(setID) {
         cacheLine.isEmpty = 1;
         cacheLine.dirtyBit = 0;
         cacheLine.tag = 0;
-        cacheLine.coherenceState = {.tokenNum = 0, .mesiState = I};
+        cacheLine.coherenceState = {.tokenNum = TOTAL_PROC_NUM, .mesiState = I};
         cacheLines.push_back(cacheLine);
     }
 }
