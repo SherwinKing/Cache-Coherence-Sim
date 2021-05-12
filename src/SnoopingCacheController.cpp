@@ -17,11 +17,16 @@ void SnoopingCacheController::runCacheOp(long address, std::string operation, in
 
     CacheLine * cacheLinePtr;
 
-    // Cache hit
+    // Cache found
     if (cache.ifCacheLinePresent(setID, tag)) {
-        statistics.cacheHit(processorID, address);
-
         cacheLinePtr = & cache.getCacheLine(setID, tag);
+        if (cacheLinePtr->coherenceState.mesiState == I) {
+            // Coherence miss
+            statistics.cacheMiss(processorID, address);
+        } else {
+            // Cache hit
+            statistics.cacheHit(processorID, address);
+        }
     }
     // Cache miss
     else {
@@ -77,7 +82,6 @@ void SnoopingCacheController::transitCacheLineStateOnRequest(CacheLine &cacheLin
                 statistics.cacheInvalidate(processorID, cacheAddress);
             }
             cacheLine.coherenceState.mesiState = I;
-            cacheLine.isEmpty = 1;
             break;
         default:
             throw "Invalid state: the request type is not supported!";
