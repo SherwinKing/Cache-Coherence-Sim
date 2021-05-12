@@ -20,13 +20,13 @@ Cache::Cache(int id, int s, int E, int b) : id(id), s(s), E(E), b(b) {
 
 CacheLine *Cache::findCacheLine(long setID, long tag) {
 //    // Get the set index and tag for the block
-    std::cerr << "findcacheline setID: " << setID << std::endl;
+    //std::cerr << "findcacheline setID: " << setID << std::endl;
     CacheSet & cacheSet = cacheSets[setID];
     return cacheSet.findCacheLine(tag);
 }
 
 int Cache::ifCacheLinePresent(long setInd, long tag) {
-    std::cerr << "pointer:" << findCacheLine(setInd, tag) << std::endl;
+    //std::cerr << "pointer:" << findCacheLine(setInd, tag) << std::endl;
     return findCacheLine(setInd, tag) != nullptr;
 }
 

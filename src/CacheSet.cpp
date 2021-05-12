@@ -47,7 +47,7 @@ CacheLine &CacheSet::findCacheBlockToReplace() {
         // If found empty cache block, use it
         if (iterator->isEmpty) {
             cacheLineToReplace = iterator;
-            std::cerr << "findCacheBlockToReplace: found empty block. iterator address" << &*cacheLineToReplace << std::endl;
+            //std::cerr << "findCacheBlockToReplace: found empty block. iterator address" << &*cacheLineToReplace << std::endl;
             break;
         }
 
@@ -58,7 +58,7 @@ CacheLine &CacheSet::findCacheBlockToReplace() {
         }
         iterator++;
     }
-    std::cerr << "findCacheBlockToReplace iterator address" << &*cacheLineToReplace << std::endl;
-    std::cerr << "findCacheBlockToReplace block.isEmpty" << cacheLineToReplace->isEmpty << std::endl;
+    //std::cerr << "findCacheBlockToReplace iterator address" << &*cacheLineToReplace << std::endl;
+    //std::cerr << "findCacheBlockToReplace block.isEmpty" << cacheLineToReplace->isEmpty << std::endl;
     return *cacheLineToReplace;
 }

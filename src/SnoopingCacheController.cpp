@@ -4,8 +4,8 @@
 void SnoopingCacheController::updateCacheLine(CacheLine &cacheLineToUpdate, long newTag, std::string operation,
                                               int timeStamp) {
     cacheLineToUpdate.tag = newTag;
-    std::cerr << "updateCacheLine << cacheLineToUpdate.tag: " << cacheLineToUpdate.tag << std::endl;
-    std::cerr << "in updateCacheLine, address: " << &cacheLineToUpdate;
+    //std::cerr << "updateCacheLine << cacheLineToUpdate.tag: " << cacheLineToUpdate.tag << std::endl;
+    //std::cerr << "in updateCacheLine, address: " << &cacheLineToUpdate;
     cacheLineToUpdate.isEmpty = 0;
     cacheLineToUpdate.lastUseTimestamp = timeStamp;
     cacheLineToUpdate.dirtyBit = (operation == "S") ? 1 : 0;
@@ -68,6 +68,7 @@ void SnoopingCacheController::transitCacheLineStateOnRequest(CacheLine &cacheLin
                 statistics.cacheFlush(processorID, cacheAddress);
             }
             if (cacheLine.coherenceState.mesiState != I) {
+                //printf("Cache[%d] in S   |   ", processorID);
                 cacheLine.coherenceState.mesiState = S;
             }
             break;
@@ -89,7 +90,9 @@ void SnoopingCacheController::transitCacheLineStateOnRequest(CacheLine &cacheLin
 
 void SnoopingCacheController::transitCacheLineStateOnOperation(CacheLine &cacheLine, long cacheAddress, std::string operation) {
 
-    if (operation == "R") {
+    //printf("\n*********************\n");
+    if (operation == "L") {
+        //printf("Cache[%d] has L operation\n", processorID);
         switch (cacheLine.coherenceState.mesiState) {
             case MESIState::I: {
                 // Broadcast request
@@ -104,21 +107,31 @@ void SnoopingCacheController::transitCacheLineStateOnOperation(CacheLine &cacheL
                     if (responseVector[i].getResponseType() == ACK_SHARED)
                         ifNoOtherShared = 0;
                 }
-                if (ifNoOtherShared == 1)
+                if (ifNoOtherShared == 1){
+                    //printf("Cache[%d] in E   |   ", processorID);
                     cacheLine.coherenceState.mesiState = MESIState::E;
-                else
+                }
+                else{
+                    //printf("Cache[%d] in S   |   ", processorID);
                     cacheLine.coherenceState.mesiState = MESIState::S;
+                }
                 break;
             }
             case MESIState::S:
+                //printf("Cache[%d] in S   |   ", processorID);
+                //break;
             case MESIState::E:
+                //printf("Cache[%d] in E   |   ", processorID);
+                //break;
             case MESIState::M:
+                //printf("Cache[%d] in M   |   ", processorID);
                 // No action
                 break;
             default:
                 throw "Illegal state: the mesi state is illegal!";
         }
     } else {    // operation == "S"
+        //printf("Cache[%d] has S operation\n", processorID);
         switch (cacheLine.coherenceState.mesiState) {
             case MESIState::I:
             case MESIState::S: {
@@ -136,6 +149,7 @@ void SnoopingCacheController::transitCacheLineStateOnOperation(CacheLine &cacheL
             default:
                 throw "Illegal state: the mesi state is illegal!";
         }
+        //printf("Cache[%d] in M   |   ", processorID);
         cacheLine.coherenceState.mesiState = MESIState::M;
     }
 }
