@@ -38,6 +38,8 @@ void SnoopingCacheController::runCacheOp(long address, std::string operation, in
         if (!cacheLinePtr->isEmpty) {
             statistics.cacheEvict(processorID, cacheLinePtr->setID, cacheLinePtr->tag);
             cacheLinePtr->isEmpty = 1;
+            // initlizate cache line to I state
+            cacheLinePtr->coherenceState.mesiState = I;
         }
     }
 
