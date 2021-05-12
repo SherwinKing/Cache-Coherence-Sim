@@ -37,8 +37,10 @@ Simulator::Simulator(int s, int E, int b, int n, int verbose, std::string traceF
     }
 
     for (int i = 0; i < n; i++) {
+//        std::shared_ptr<NodeController> nodeControllerPointer
+//                = std::make_shared<SnoopingCacheController>(s, E, b, i, interconnection, statistics);
         std::shared_ptr<NodeController> nodeControllerPointer
-                = std::make_shared<SnoopingCacheController>(s, E, b, i, interconnection, statistics);
+                = std::make_shared<TokenCacheController>(s, E, b, i, interconnection, statistics);
         nodeSmartPointerControllers.push_back(nodeControllerPointer);
     }
 

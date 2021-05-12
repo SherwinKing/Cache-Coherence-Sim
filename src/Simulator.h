@@ -7,6 +7,7 @@
 #include <fstream>
 #include <getopt.h>
 #include "SnoopingCacheController.h"
+#include "TokenCacheController.h"
 #include "Cache.h"
 #include "Statistics.h"
 #include "Interconnection.h"
