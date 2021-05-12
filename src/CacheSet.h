@@ -6,6 +6,8 @@
 #include <vector>
 #include "Statistics.h"
 
+// global variable for the number of processors
+extern int TOTAL_PROC_NUM;
 enum MESIState { M, E, S, I};
 
 typedef struct {
