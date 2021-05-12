@@ -112,7 +112,8 @@ void TokenCacheController::runCacheOp(long address, std::string operation, int t
             statistics.cacheEvict(processorID, cacheLinePtr->setID, cacheLinePtr->tag);
             // TODO: Where do the tokens go?
             cacheLinePtr->isEmpty = 1;
-            cacheLinePtr->coherenceState.tokenNum = TOTAL_PROC_NUM;
+            cacheLinePtr->coherenceState.tokenNum = 0;
+            // TODO send eviction to directory
         }
     }
     updateCacheLine(*cacheLinePtr, tag, operation, timeStamp);
