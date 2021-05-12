@@ -19,11 +19,14 @@ void SnoopingCacheController::runCacheOp(long address, std::string operation, in
 
     CacheLine * cacheLinePtr;
 
-    // Cache hit
+    // Cache hit if not in I state
     if (cache.ifCacheLinePresent(setID, tag)) {
-        statistics.cacheHit(processorID, address);
-
         cacheLinePtr = & cache.getCacheLine(setID, tag);
+        if(cacheLinePtr->coherenceState.mesiState == I){
+            statistics.cacheMiss(processorID, address);
+        }else{
+            statistics.cacheHit(processorID, address);
+        }
     }
     // Cache miss
     else {
@@ -68,7 +71,6 @@ void SnoopingCacheController::transitCacheLineStateOnRequest(CacheLine &cacheLin
                 statistics.cacheFlush(processorID, cacheAddress);
             }
             if (cacheLine.coherenceState.mesiState != I) {
-                //printf("Cache[%d] in S   |   ", processorID);
                 cacheLine.coherenceState.mesiState = S;
             }
             break;
@@ -80,7 +82,7 @@ void SnoopingCacheController::transitCacheLineStateOnRequest(CacheLine &cacheLin
                 statistics.cacheInvalidate(processorID, cacheAddress);
             }
             cacheLine.coherenceState.mesiState = I;
-            cacheLine.isEmpty = 1;
+            //cacheLine.isEmpty = 1;
             break;
         default:
             throw "Invalid state: the request type is not supported!";
@@ -90,9 +92,7 @@ void SnoopingCacheController::transitCacheLineStateOnRequest(CacheLine &cacheLin
 
 void SnoopingCacheController::transitCacheLineStateOnOperation(CacheLine &cacheLine, long cacheAddress, std::string operation) {
 
-    //printf("\n*********************\n");
     if (operation == "L") {
-        //printf("Cache[%d] has L operation\n", processorID);
         switch (cacheLine.coherenceState.mesiState) {
             case MESIState::I: {
                 // Broadcast request
@@ -108,30 +108,22 @@ void SnoopingCacheController::transitCacheLineStateOnOperation(CacheLine &cacheL
                         ifNoOtherShared = 0;
                 }
                 if (ifNoOtherShared == 1){
-                    //printf("Cache[%d] in E   |   ", processorID);
                     cacheLine.coherenceState.mesiState = MESIState::E;
                 }
                 else{
-                    //printf("Cache[%d] in S   |   ", processorID);
                     cacheLine.coherenceState.mesiState = MESIState::S;
                 }
                 break;
             }
             case MESIState::S:
-                //printf("Cache[%d] in S   |   ", processorID);
-                //break;
             case MESIState::E:
-                //printf("Cache[%d] in E   |   ", processorID);
-                //break;
             case MESIState::M:
-                //printf("Cache[%d] in M   |   ", processorID);
                 // No action
                 break;
             default:
                 throw "Illegal state: the mesi state is illegal!";
         }
     } else {    // operation == "S"
-        //printf("Cache[%d] has S operation\n", processorID);
         switch (cacheLine.coherenceState.mesiState) {
             case MESIState::I:
             case MESIState::S: {
@@ -149,7 +141,6 @@ void SnoopingCacheController::transitCacheLineStateOnOperation(CacheLine &cacheL
             default:
                 throw "Illegal state: the mesi state is illegal!";
         }
-        //printf("Cache[%d] in M   |   ", processorID);
         cacheLine.coherenceState.mesiState = MESIState::M;
     }
 }
