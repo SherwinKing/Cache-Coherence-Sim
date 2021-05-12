@@ -28,7 +28,7 @@ private:
 
     void transitCacheLineStateOnRequest(CacheLine &cacheLine, long cacheAddress, Request request) override ;
 
-    void transitCacheLineStateOnOperation(CacheLine &cacheLine, long cacheAddress, std::string operation)  ;
+    void transitCacheLineStateOnOperation(CacheLine &cacheLine, long cacheAddress, std::string operation) override ;
 
     void updateCacheLine(CacheLine &cacheLineToUpdate, long newTag, std::string operation, int timeStamp);
 

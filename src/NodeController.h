@@ -11,7 +11,7 @@
 class NodeController {
 private:
     virtual void transitCacheLineStateOnRequest(CacheLine &cacheLine, long cacheAddress, Request request) = 0;
-//    virtual void transitCacheLineStateOnOperation(CacheLine &cacheLine, long cacheAddress, std::string operation);
+    virtual void transitCacheLineStateOnOperation(CacheLine &cacheLine, long cacheAddress, std::string operation) = 0;
 public:
     virtual void runCacheOp(long address, std::string operation, int timeStamp) = 0;
 //    virtual Response requestHandler(Request request) = 0;
