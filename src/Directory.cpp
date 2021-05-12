@@ -116,8 +116,13 @@ Response Directory::requestHandler_DIREC(Request request, int sourceID){
             response.setCacheOwnerIDs(cacheOwnerID);
         }
         else{
+            std::list<int> cacheOwnerIDs;
+            for(int i=0; i<numCaches_; i++){
+                if(line->presence_[i])
+                    cacheOwnerIDs.push_back(i);
+            }
             line->presence_[sourceID] = true;
-            response.setCacheOwnerIDs(std::list<int>());
+            response.setCacheOwnerIDs(cacheOwnerIDs);
         }
     }
     // write operation
@@ -166,6 +171,7 @@ void Directory::evictionHandler_DIREC(int sourceID, long setID, long tag, int to
         for(auto p : line->presence_)
             assert(!p);
         directory_.erase(lineID);
+        delete line;
     }
     else{
         bool any_valid = false;
