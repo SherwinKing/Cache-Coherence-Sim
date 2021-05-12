@@ -164,7 +164,8 @@ void Directory::evictionHandler_DIREC(int sourceID, long setID, long tag, int to
     DirectoryLine* line;
     bool if_exist = getLine(&line, lineID);
     assert(if_exist);
-    assert(line->presence_[sourceID]);
+    // evicted line might be invalid
+    //assert(line->presence_[sourceID]);
 
     line->presence_[sourceID] = false;
     if(line->dirty_){
