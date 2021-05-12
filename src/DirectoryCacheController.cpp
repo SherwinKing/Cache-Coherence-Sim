@@ -39,6 +39,8 @@ void DirectoryCacheController::runCacheOp(long address, std::string operation, i
             // TODO send message to directory
             interconnection.sendEviction(processorID, setID, tag, 0);
             //cacheLinePtr->isEmpty = 1;
+            // initialize this line to I state
+            cacheLinePtr->coherenceState.mesiState = I;
         }
     }
 
