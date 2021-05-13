@@ -20,6 +20,8 @@ public:
     void cacheEvict(int processorID, long setID, long tag);
     void cacheInvalidate(int processorID, long address);
 
+    void addLatency(int processorID, int latency);
+
     void printSummary();
 
     void setProcessorNum(int processorNum);
