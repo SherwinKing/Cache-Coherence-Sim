@@ -98,7 +98,10 @@ void SnoopingCacheController::transitCacheLineStateOnOperation(CacheLine &cacheL
                 RequestType requestType = BusRd;
                 Request request(requestType, coherenceType, cacheAddress);
                 std::vector<Response> responseVector;
-                interconnection.broadcastRequest(processorID, request, responseVector);
+                int broadCastLatency = interconnection.broadcastRequest(processorID, request, responseVector);
+
+                // Add interconnection latency
+                statistics.addLatency(processorID, broadCastLatency);
 
                 // Check if no other cache asserts shared
                 int ifNoOtherShared = 1;
@@ -106,8 +109,11 @@ void SnoopingCacheController::transitCacheLineStateOnOperation(CacheLine &cacheL
                     if (responseVector[i].getResponseType() == ACK_SHARED)
                         ifNoOtherShared = 0;
                 }
-                if (ifNoOtherShared == 1)
+                if (ifNoOtherShared == 1) {
                     cacheLine.coherenceState.mesiState = MESIState::E;
+                    // Read from memory, add miss penalty latency
+                    statistics.addLatency(processorID, 200);
+                }
                 else
                     cacheLine.coherenceState.mesiState = MESIState::S;
                 break;
@@ -128,7 +134,25 @@ void SnoopingCacheController::transitCacheLineStateOnOperation(CacheLine &cacheL
                 RequestType requestType = BusRdX;
                 Request request(requestType, coherenceType, cacheAddress);
                 std::vector<Response> responseVector;
-                interconnection.broadcastRequest(processorID, request, responseVector);
+                int broadCastLatency = interconnection.broadcastRequest(processorID, request, responseVector);
+
+                // Add interconnection latency
+                statistics.addLatency(processorID, broadCastLatency);
+
+                // Should add miss penalty of memory read if data not from other cache (no other shared) for I state
+                if (cacheLine.coherenceState.mesiState == MESIState::I) {
+                    // Check if no other cache asserts shared
+                    int ifNoOtherShared = 1;
+                    for (int i = 0; i < responseVector.size(); i++) {
+                        if (responseVector[i].getResponseType() == ACK_SHARED)
+                            ifNoOtherShared = 0;
+                    }
+                    if (ifNoOtherShared == 1) {
+                        // Read from memory, add miss penalty latency
+                        statistics.addLatency(processorID, 200);
+                    }
+                }
+
                 break;
             }
             case MESIState::E:
