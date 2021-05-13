@@ -1,7 +1,7 @@
 #include "Interconnection.h"
 
-Interconnection::Interconnection(TOPO topo, std::vector<std::shared_ptr<NodeController>> &nodeVector) :
-        nodeControllerSmartPointerVector(nodeVector){
+Interconnection::Interconnection(TOPO topo, std::vector<std::shared_ptr<NodeController>> &nodeVector, Statistics & statistics) :
+        nodeControllerSmartPointerVector(nodeVector), statistics(statistics){
 //    this->nodeControllerSmartPointerVector = nodeControllerSmartPointerVector;
     initializeLatencyMatrix(latencyMatrix, topo, nodeVector.size());
 }
@@ -10,10 +10,13 @@ Response Interconnection::sendRequest(int sourceID, int receiverID, Request requ
     // If receiver is special (used for directory node)
     if (receiverID == -1) {
         receiverID = nodeControllerSmartPointerVector.size() - 1;
-        latency = 2;
+        latency = 2 * HOP_TO_HOP_LATENCY;
     } else {
-        latency = 2 * getLatency(sourceID, receiverID);
+        latency = 2 * HOP_TO_HOP_LATENCY * getLatency(sourceID, receiverID);
     }
+
+    std::cerr << "addCommunicationCount" << std::endl;
+    statistics.addCommunicationCount(2);
 
     Response response = nodeControllerSmartPointerVector[receiverID]->requestHandler(request, sourceID);
     return response;
@@ -37,6 +40,9 @@ int Interconnection::broadcastRequest(int sourceID, Request request, std::vector
         responseVector.push_back(response);
     }
     totalLatency += responseVector.size();
+
+    statistics.addCommunicationCount(2 * responseVector.size());
+
     return  totalLatency;
 }
 
