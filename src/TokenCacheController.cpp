@@ -2,10 +2,12 @@
 #include "CacheSet.h"
 
 void TokenCacheController::transitCacheLineStateOnRequest(CacheLine &cacheLine, long cacheAddress, Request request) {
+    /*
     // If cache line is dirty, and loose write right, flush
     if (cacheLine.coherenceState.tokenNum == TOTAL_PROC_NUM && cacheLine.dirtyBit) {
         statistics.cacheFlush(processorID, cacheAddress);
     }
+    */
 
     // Gives one token if this cache line has more than one tokens. Otherwise don't give
     if (request.getRequestType() == TOKEN_REQUEST_R) {
@@ -14,8 +16,9 @@ void TokenCacheController::transitCacheLineStateOnRequest(CacheLine &cacheLine, 
         }
     } else {
         assert((request.getRequestType() == TOKEN_REQUEST_W));
+        if(cacheLine.coherenceState.tokenNum > 0)
+            statistics.cacheInvalidate(processorID, cacheAddress);
         cacheLine.coherenceState.tokenNum = 0;
-        statistics.cacheInvalidate(processorID, cacheAddress);
     }
 }
 
@@ -35,6 +38,7 @@ TokenCacheController::transitCacheLineStateOnOperation(CacheLine &cacheLine, lon
                 receivedTokenNum += response.getTokenNum();
             }
             cacheLine.coherenceState.tokenNum += receivedTokenNum;
+            assert(receivedTokenNum == 1);
 
         } else {
             assert(cacheLine.coherenceState.tokenNum > 0);
@@ -110,9 +114,12 @@ void TokenCacheController::runCacheOp(long address, std::string operation, int t
         // Check if the cache line is to be evicted
         if (!cacheLinePtr->isEmpty) {
             statistics.cacheEvict(processorID, cacheLinePtr->setID, cacheLinePtr->tag);
-            // TODO: Where do the tokens go?
+            // TODO send eviction to directory
+            // send all token back to directory
+            interconnection.sendEviction(processorID, setID, tag, cacheLinePtr->coherenceState.tokenNum);
             cacheLinePtr->isEmpty = 1;
-            cacheLinePtr->coherenceState.tokenNum = TOTAL_PROC_NUM;
+            cacheLinePtr->coherenceState.tokenNum = 0;
+            statistics.cacheFlush(processorID, address);
         }
     }
     updateCacheLine(*cacheLinePtr, tag, operation, timeStamp);
