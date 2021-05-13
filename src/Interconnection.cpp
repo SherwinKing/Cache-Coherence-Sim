@@ -10,9 +10,9 @@ Response Interconnection::sendRequest(int sourceID, int receiverID, Request requ
     // If receiver is special (used for directory node)
     if (receiverID == -1) {
         receiverID = nodeControllerSmartPointerVector.size() - 1;
-        latency = 1;
+        latency = 2;
     } else {
-        latency = getLatency(sourceID, receiverID);
+        latency = 2 * getLatency(sourceID, receiverID);
     }
 
     Response response = nodeControllerSmartPointerVector[receiverID]->requestHandler(request, sourceID);
@@ -24,7 +24,7 @@ int Interconnection::getLatency(int nodeID1, int nodeID2) {
 }
 
 int Interconnection::broadcastRequest(int sourceID, Request request, std::vector<Response> &responseVector) {
-    int totalLatency;
+    int totalLatency = 0;
     for (int receiverID = 0; receiverID < nodeControllerSmartPointerVector.size(); receiverID++) {
         if (receiverID == sourceID)
             continue;
@@ -36,5 +36,6 @@ int Interconnection::broadcastRequest(int sourceID, Request request, std::vector
 
         responseVector.push_back(response);
     }
+    totalLatency += responseVector.size();
     return  totalLatency;
 }
