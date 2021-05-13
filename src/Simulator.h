@@ -20,6 +20,7 @@ private:
     std::vector<std::shared_ptr<NodeController>> nodeSmartPointerControllers;
     Statistics statistics;
     Interconnection interconnection;
+    CoherenceType mode_;
 //    int getOptions(int argc, char* argv[]);
 
     int s;  // Number of set index bits (2^s is the cache size, or the number of sets in cache)
@@ -32,7 +33,7 @@ private:
     std::ifstream traceFileStream;
 
 public:
-    Simulator(int s, int E, int b, int n, int verbose, std::string traceFilePath, const TOPO topo);
+    Simulator(int s, int E, int b, int n, int verbose, std::string traceFilePath, const TOPO topo, CoherenceType mode);
 
     void runTraceFile();
 

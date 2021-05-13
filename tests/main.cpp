@@ -14,6 +14,9 @@ int main(int argc, char * argv[]) {
     int n;  // The number of processor
     std::string traceFilePath;
 
+    TOPO interconnectionTOPO = TOPO::D_RING;
+    CoherenceType mode = TOKEN;
+
     while( (option = getopt(argc, argv, "hvs:E:b:t:n:")) != -1 ){
         switch(option){
             case 'v':
@@ -40,8 +43,7 @@ int main(int argc, char * argv[]) {
         }
     }
 
-    TOPO interconnectionTOPO = TOPO::D_RING;
-    Simulator simulator(s, E, b, n, verbose, traceFilePath, interconnectionTOPO);
+    Simulator simulator(s, E, b, n, verbose, traceFilePath, interconnectionTOPO, mode);
 
     simulator.runTraceFile();
 
