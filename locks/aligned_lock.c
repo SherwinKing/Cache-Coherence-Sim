@@ -59,7 +59,7 @@ void* thread_fn(void* vargp){
     pthread_t thread;
     thread = pthread_self();
     CPU_ZERO(&cpuset);
-    CPU_SET(id, &cpuset);
+    CPU_SET(id%8, &cpuset);
     int s = pthread_setaffinity_np(thread, sizeof(cpuset), &cpuset);
     if(s){
         fprintf(stderr, "thread set cpu affinity error\n");
@@ -82,7 +82,6 @@ void* thread_fn(void* vargp){
 
 int main(int argc, char* argv[]){
 
-    /*
     extern char* optarg;
     extern int optind, opterr, optopt;
     char opt;
@@ -111,7 +110,6 @@ int main(int argc, char* argv[]){
         printf("NUM_PROCESSOR set to %d\nCOUNT_TO set to %d\n", NUM_PROCESSOR,
                                                                 COUNT_TO);
 
-    */
 
     array_lock_t lock;
     array_lock_init(&lock);

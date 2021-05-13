@@ -8,8 +8,8 @@
 #include <stdbool.h>
 
 int counter = 0;
-int NUM_PROCESSOR = 32;
-int COUNT_TO = 10;
+int NUM_PROCESSOR = 8;
+int COUNT_TO = 2;
 bool verbose = false;
 
 char* HELP_MSG = "-h for help\n-n number of threads to generate\n-c number of each thread to count to\n";
@@ -73,7 +73,6 @@ void* thread_fn(void* vargp){
 
 int main(int argc, char* argv[]){
 
-    /*
     extern char* optarg;
     extern int optind, opterr, optopt;
     char opt;
@@ -102,7 +101,6 @@ int main(int argc, char* argv[]){
         printf("NUM_PROCESSOR set to %d\nCOUNT_TO set to %d\n", NUM_PROCESSOR,
                                                                 COUNT_TO);
 
-    */
 
     ts_lock_t lock;
     ts_lock_init(&lock);
