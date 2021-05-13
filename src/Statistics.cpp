@@ -34,6 +34,10 @@ void Statistics::cacheInvalidate(int processorID, long address) {
     cacheInvalidationNum++;
 }
 
+void Statistics::addLatency(int processorID, int latency) {
+    latencySum += latency;
+}
+
 void Statistics::printSummary() {
     std::cout << "Total operation: " << totalOperationNum << std::endl;
     std::cout << "Cache hit number: " << cacheHitNum << std::endl;

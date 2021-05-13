@@ -1,6 +1,5 @@
-
-#ifndef PROJECT_CSIM_SNOOPINGCACHECONTROLLER_H
-#define PROJECT_CSIM_SNOOPINGCACHECONTROLLER_H
+#ifndef PROJECT_CSIM_TOKENCACHECONTROLLER_H
+#define PROJECT_CSIM_TOKENCACHECONTROLLER_H
 
 #include <string>
 #include "NodeController.h"
@@ -10,7 +9,7 @@
 #include "Response.h"
 #include "Request.h"
 
-class SnoopingCacheController: public NodeController {
+class TokenCacheController: public NodeController {
 private:
     int id;
     int s;  // Number of set index bits (2^s is the cache size, or the number of sets in cache)
@@ -20,7 +19,7 @@ private:
     long setIDMask;
     long tagMask;
 
-    const CoherenceType coherenceType = SNOOPING;
+    const CoherenceType coherenceType = TOKEN;
     int processorID;
     Cache cache;
     Interconnection & interconnection;
@@ -33,7 +32,7 @@ private:
     void updateCacheLine(CacheLine &cacheLineToUpdate, long newTag, std::string operation, int timeStamp);
 
 public:
-    SnoopingCacheController(int s, int E, int b, int processorID,
+    TokenCacheController(int s, int E, int b, int processorID,
                             Interconnection &interconnection, Statistics &statistics);
 
     void runCacheOp(long address, std::string operation, int timeStamp) override;
@@ -44,4 +43,4 @@ public:
 };
 
 
-#endif //PROJECT_CSIM_SNOOPINGCACHECONTROLLER_H
+#endif //PROJECT_CSIM_TOKENCACHECONTROLLER_H
