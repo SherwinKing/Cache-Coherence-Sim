@@ -48,7 +48,7 @@ Simulator::Simulator(int s, int E, int b, int n, int verbose, std::string traceF
         nodeSmartPointerControllers.push_back(nodeControllerPointer);
     }
     // one cache directory
-    nodeSmartPointerControllers.push_back(std::make_shared<Directory>(n, b, s, DIRECTORY));
+    nodeSmartPointerControllers.push_back(std::make_shared<Directory>(n, b, s, DIRECTORY, statistics));
 
     interconnection = Interconnection(topo, nodeSmartPointerControllers);
     statistics = Statistics();

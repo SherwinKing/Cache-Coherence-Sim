@@ -28,12 +28,13 @@ struct DirectoryLine {
 class Directory: public NodeController {
 public:
     
-    Directory(int numCaches, int b, int s, CoherenceType mode)
+    Directory(int numCaches, int b, int s, CoherenceType mode, Statistics& stat)
         : nodeID_(-1),
           numCaches_(numCaches),
           b_(b),
           s_(s),
-          mode_(mode) {}
+          mode_(mode),
+          stat_(stat) {}
 
     virtual ~Directory() {
         for(auto& i : directory_)
@@ -57,6 +58,7 @@ private:
     int s_;         // number of set bits
     CoherenceType mode_;
     std::unordered_map<long, DirectoryLine*> directory_;
+    Statistics& stat_;
 
     bool getLine(DirectoryLine** line_ptr, long lineID);
     long getLineID(long address);

@@ -50,6 +50,10 @@ Response Directory::requestHandler_TOKEN(Request request, int sourceID){
     DirectoryLine* line;
     bool if_exist = getLine(&line, lineID);
 
+    // add memory fetch latency
+    if(!if_exist)
+        stat_.addLatency(-1, 200);
+
     if(request.getRequestType() == TOKEN_REQUEST_R){
         if(line->token_pool_ > 0){
             line->token_pool_--;
@@ -98,6 +102,10 @@ Response Directory::requestHandler_DIREC(Request request, int sourceID){
 
     DirectoryLine* line;
     bool if_exist = getLine(&line, lineID);
+
+    // memory fetch latency
+    if(!if_exist)
+        stat_.addLatency(-1, 200);
 
     // read operation
     if(request.getRequestType() == DIRECTORY_REQUEST_R){
