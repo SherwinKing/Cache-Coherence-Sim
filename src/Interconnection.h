@@ -12,6 +12,7 @@
 
 class Interconnection {
 private:
+    TOPO topo;
     std::vector<std::vector<int>> latencyMatrix;
     std::vector<std::shared_ptr<NodeController>> nodeControllerSmartPointerVector;
 
@@ -20,7 +21,10 @@ private:
 //    void setLatency(int i, int j, int latency);
     int getLatency(int nodeID1, int nodeID2);
 public:
-    Interconnection(TOPO topo, std::vector<std::shared_ptr<NodeController>> &nodeVector, Statistics & statistics);
+    Interconnection(TOPO topo, Statistics & statisticsRef);
+
+    void setNodeControllerSmartPointerVector(
+            const std::vector<std::shared_ptr<NodeController>> &nodeControllerSmartPointerVector);
 
     Response sendRequest(int sourceID, int receiverID, Request request, int & latency);
     int broadcastRequest(int sourceID, Request request, std::vector<Response> & responseVector);

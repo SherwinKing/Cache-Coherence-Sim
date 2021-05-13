@@ -28,7 +28,7 @@ void Simulator::printSummary() {
 
 Simulator::Simulator(int s, int E, int b, int n, int verbose, std::string traceFilePath, const TOPO topo) :
         s(s), E(E), b(b), n(n), verbose(verbose),
-        traceFileStream(traceFilePath), statistics(), interconnection(topo, nodeSmartPointerControllers, statistics){
+        traceFileStream(traceFilePath), statistics(), interconnection(topo, statistics){
     if (!traceFileStream.is_open())
     {
         std::cerr << "Error opening trace file";
@@ -54,5 +54,6 @@ Simulator::Simulator(int s, int E, int b, int n, int verbose, std::string traceF
     }
     // one cache directory
     nodeSmartPointerControllers.push_back(std::make_shared<Directory>(n, b, s, DIRECTORY, statistics));
+    interconnection.setNodeControllerSmartPointerVector(nodeSmartPointerControllers);
 
 }
