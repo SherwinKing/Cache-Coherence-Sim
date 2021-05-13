@@ -110,14 +110,13 @@ void DirectoryCacheController::transitCacheLineStateOnRequest(CacheLine &cacheLi
 
 void DirectoryCacheController::transitCacheLineStateOnOperation(CacheLine &cacheLine, long cacheAddress, std::string operation) {
 
-    //printf("\n*********************\n");
     if (operation == "L") {
-        //printf("Cache[%d] has L operation\n", processorID);
         switch (cacheLine.coherenceState.mesiState) {
             case MESIState::I: {
                 // send request to directory first
                 int directoryLatency = 0;
                 int cacheLatency = 0;
+                int cacheLatencyMx = 0;
                 RequestType directoryRequestType = DIRECTORY_REQUEST_R;
                 Request directoryRequest(directoryRequestType, coherenceType, cacheAddress);
                 Response directoryResponse = interconnection.sendRequest(processorID, -1, directoryRequest, directoryLatency);
@@ -132,9 +131,10 @@ void DirectoryCacheController::transitCacheLineStateOnOperation(CacheLine &cache
                     for(auto ownerID : directoryResponse.getCacheOwnerIDs()){
                         Response cacheResponse = interconnection.sendRequest(processorID, ownerID, cacheRequest, cacheLatency);
                         // TODO need to calculate the latency somehow
-                        
+                        cacheLatencyMx = (cacheLatencyMx<cacheLatency) ? cacheLatency : cacheLatencyMx;         
                     }
                 }
+                statistics.addLatency(processorID, directoryLatency+cacheLatencyMx);
 
                 break;
             }
@@ -147,13 +147,13 @@ void DirectoryCacheController::transitCacheLineStateOnOperation(CacheLine &cache
                 throw "Illegal state: the mesi state is illegal!";
         }
     } else {    // operation == "S"
-        //printf("Cache[%d] has S operation\n", processorID);
         switch (cacheLine.coherenceState.mesiState) {
             case MESIState::I:
             case MESIState::S: {
                 // send request to directory first
                 int directoryLatency = 0;
                 int cacheLatency = 0;
+                int cacheLatencyMx = 0;
                 RequestType directoryRequestType = DIRECTORY_REQUEST_W;
                 Request directoryRequest(directoryRequestType, coherenceType, cacheAddress);
                 Response directoryResponse = interconnection.sendRequest(processorID, -1, directoryRequest, directoryLatency);
@@ -163,8 +163,9 @@ void DirectoryCacheController::transitCacheLineStateOnOperation(CacheLine &cache
                 for(auto ownerID : directoryResponse.getCacheOwnerIDs()){
                     Response cacheResponse = interconnection.sendRequest(processorID, ownerID, cacheRequest, cacheLatency);
                     // TODO
-
+                    cacheLatencyMx = (cacheLatencyMx<cacheLatency) ? cacheLatency : cacheLatencyMx;
                 }
+                statistics.addLatency(processorID, directoryLatency+cacheLatencyMx);
 
                 break;
                 /*
@@ -192,7 +193,6 @@ void DirectoryCacheController::transitCacheLineStateOnOperation(CacheLine &cache
             default:
                 throw "Illegal state: the mesi state is illegal!";
         }
-        //printf("Cache[%d] in M   |   ", processorID);
         cacheLine.coherenceState.mesiState = MESIState::M;
     }
 }

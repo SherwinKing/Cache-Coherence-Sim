@@ -30,7 +30,9 @@ TokenCacheController::transitCacheLineStateOnOperation(CacheLine &cacheLine, lon
             RequestType requestType = TOKEN_REQUEST_R;
             Request request(requestType, coherenceType, cacheAddress);
             std::vector<Response> responseVector;
-            interconnection.broadcastRequest(processorID, request, responseVector);
+            // latency calculation
+            int latency = interconnection.broadcastRequest(processorID, request, responseVector);
+            statistics.addLatency(processorID, latency);
 
             // Add received tokens
             int receivedTokenNum = 0;
@@ -50,7 +52,8 @@ TokenCacheController::transitCacheLineStateOnOperation(CacheLine &cacheLine, lon
             RequestType requestType = TOKEN_REQUEST_W;
             Request request(requestType, coherenceType, cacheAddress);
             std::vector<Response> responseVector;
-            interconnection.broadcastRequest(processorID, request, responseVector);
+            int latency = interconnection.broadcastRequest(processorID, request, responseVector);
+            statistics.addLatency(processorID, latency);
 
             // Add received tokens
             int receivedTokenNum = 0;
