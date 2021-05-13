@@ -16,7 +16,6 @@ Response Interconnection::sendRequest(int sourceID, int receiverID, Request requ
         latency = 2 * HOP_TO_HOP_LATENCY * getLatency(sourceID, receiverID);
     }
 
-    std::cerr << "addCommunicationCount" << std::endl;
     statistics.addCommunicationCount(2);
 
     Response response = nodeControllerSmartPointerVector[receiverID]->requestHandler(request, sourceID);
