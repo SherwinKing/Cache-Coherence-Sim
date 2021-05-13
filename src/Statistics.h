@@ -12,6 +12,7 @@ private:
     long cacheInvalidationNum;
     long latencySum;
     int processorNum;
+    int communicationCount;
 
 public:
     void cacheHit(int processorID, long address);
@@ -21,6 +22,7 @@ public:
     void cacheInvalidate(int processorID, long address);
 
     void addLatency(int processorID, int latency);
+    void addCommunicationCount(int count);
 
     void printSummary();
 

@@ -28,13 +28,18 @@ void Simulator::printSummary() {
 
 Simulator::Simulator(int s, int E, int b, int n, int verbose, std::string traceFilePath, const TOPO topo) :
         s(s), E(E), b(b), n(n), verbose(verbose),
-        traceFileStream(traceFilePath) ,interconnection(topo, nodeSmartPointerControllers), statistics() {
+        traceFileStream(traceFilePath), statistics(), interconnection(topo, nodeSmartPointerControllers, statistics){
     if (!traceFileStream.is_open())
     {
         std::cerr << "Error opening trace file";
         traceFileStream.close();
         exit(EXIT_FAILURE);
     }
+
+//    statistics = Statistics();
+//    interconnection = Interconnection(topo, nodeSmartPointerControllers, statistics);
+    TOTAL_PROC_NUM = n;
+    statistics.setProcessorNum(n);
 
     for (int i = 0; i < n; i++) {
 //        std::shared_ptr<NodeController> nodeControllerPointer
@@ -44,8 +49,4 @@ Simulator::Simulator(int s, int E, int b, int n, int verbose, std::string traceF
         nodeSmartPointerControllers.push_back(nodeControllerPointer);
     }
 
-    interconnection = Interconnection(topo, nodeSmartPointerControllers);
-    statistics = Statistics();
-    TOTAL_PROC_NUM = n;
-    statistics.setProcessorNum(n);
 }
