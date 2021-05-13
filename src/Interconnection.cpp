@@ -1,9 +1,10 @@
 #include "Interconnection.h"
 
-Interconnection::Interconnection(TOPO topo, std::vector<std::shared_ptr<NodeController>> &nodeVector, Statistics & statistics) :
-        nodeControllerSmartPointerVector(nodeVector), statistics(statistics){
+Interconnection::Interconnection(TOPO topo, Statistics & statisticsRef) :
+        statistics(statisticsRef){
+    this->topo = topo;
 //    this->nodeControllerSmartPointerVector = nodeControllerSmartPointerVector;
-    initializeLatencyMatrix(latencyMatrix, topo, nodeVector.size());
+
 }
 
 Response Interconnection::sendRequest(int sourceID, int receiverID, Request request, int & latency) {
@@ -41,7 +42,13 @@ int Interconnection::broadcastRequest(int sourceID, Request request, std::vector
     }
     totalLatency += responseVector.size();
 
-    statistics.addCommunicationCount(2 * responseVector.size());
+//    statistics.addCommunicationCount(2 * responseVector.size());
 
     return  totalLatency;
+}
+
+void Interconnection::setNodeControllerSmartPointerVector(
+        const std::vector<std::shared_ptr<NodeController>> &nodeVector) {
+    Interconnection::nodeControllerSmartPointerVector = nodeVector;
+    initializeLatencyMatrix(latencyMatrix, topo, nodeVector.size());
 }
