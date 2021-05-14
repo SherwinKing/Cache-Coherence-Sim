@@ -14,10 +14,12 @@ int main(int argc, char * argv[]) {
     int n;  // The number of processor
     std::string traceFilePath;
 
-    TOPO interconnectionTOPO = TOPO::D_RING;
-    CoherenceType mode = TOKEN;
+    std::string modeString;
 
-    while( (option = getopt(argc, argv, "hvs:E:b:t:n:")) != -1 ){
+    TOPO interconnectionTOPO = TOPO::D_RING;
+    CoherenceType mode = SNOOPING;
+
+    while( (option = getopt(argc, argv, "hvs:E:b:t:n:m:")) != -1 ){
         switch(option){
             case 'v':
                 verbose = 1;
@@ -37,8 +39,23 @@ int main(int argc, char * argv[]) {
             case 't':
                 traceFilePath = optarg;
                 break;
+            case 'm':
+                modeString = optarg;
+                if (modeString == "snooping") {
+                    mode = SNOOPING;
+                } else if (modeString == "token") {
+                    mode = TOKEN;
+                } else if (modeString == "directory") {
+                    mode = DIRECTORY;
+                } else {
+                    std::cerr << "Wrong mode input of " << modeString << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+
+                std::cout << "Protocol: " << modeString << std::endl;
+                break;
             default:
-                std::cerr << "Usage: ./main [-v] -s <s> -E <E> -b <b> -t <tracefile>";
+                std::cerr << "Usage: ./main [-v] [-m <coherence mode>] -s <s> -E <E> -b <b> -t <tracefile>" << std::endl;
                 exit(EXIT_FAILURE);
         }
     }

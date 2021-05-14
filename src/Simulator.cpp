@@ -48,16 +48,21 @@ Simulator::Simulator(int s, int E, int b, int n, int verbose, std::string traceF
                 = std::make_shared<SnoopingCacheController>(s, E, b, i, interconnection, statistics);
         //nodeSmartPointerControllers.push_back(nodeControllerPointer);
 
-        if(mode_ == DIRECTORY)
+        else if(mode_ == DIRECTORY)
         // n cache controllers
         // Directory
         nodeControllerPointer = 
             std::make_shared<DirectoryCacheController>(s, E, b, i, interconnection, statistics);
         
-        if(mode_ == TOKEN)
+        else if(mode_ == TOKEN)
         // Token
         nodeControllerPointer = 
             std::make_shared<TokenCacheController>(s, E, b, i, interconnection, statistics);
+
+        else {
+            std::cerr << "Wrong mode input!" << std::endl;
+            exit(EXIT_FAILURE);
+        }
 
         nodeSmartPointerControllers.push_back(nodeControllerPointer);
     }
