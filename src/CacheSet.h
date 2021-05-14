@@ -15,6 +15,7 @@ typedef struct {
     int tokenNum;
 } CoherenceState;
 
+// This struct of CacheLine is similar to 15213 Cache Lab implementation
 typedef struct{
     long tag;
     long setID;

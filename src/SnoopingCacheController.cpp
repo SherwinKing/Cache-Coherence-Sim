@@ -176,6 +176,7 @@ SnoopingCacheController::SnoopingCacheController(int s, int E, int b,
                                                                            interconnection(interconnection),
                                                                            cache(processorID, s, E, b),
                                                                            statistics(statistics) {
+    // The way to get the mask is the same as 15213 Cache Lab implementation
     setIDMask = ((1<<s) - 1) << b;
     tagMask = ~((1<<(s+b))-1);
 //    this->s = s;
